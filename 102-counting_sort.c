@@ -9,46 +9,55 @@
  */
 void counting_sort(int *array, size_t size)
 {
-int *count_array, *output_array;
-int max = 0;
-size_t i;
+    int *count_array, *output_array;
+    int max = 0;
+    size_t i;
 
-if (!array || size < 2)
-return;
+    if (!array || size < 2)
+        return;
 
-for (i = 0; i < size; i++)
-if (array[i] > max)
-max = array[i];
+    /* Find the maximum element in the array */
+    for (i = 0; i < size; i++)
+        if (array[i] > max)
+            max = array[i];
 
-count_array = malloc((max + 1) * sizeof(int));
-output_array = malloc(size * sizeof(int));
-if (!count_array || !output_array)
-{
-free(count_array);
-free(output_array);
-return;
-}
+    /* Allocate memory for count_array and output_array */
+    count_array = malloc((max + 1) * sizeof(int));
+    output_array = malloc(size * sizeof(int));
+    if (!count_array || !output_array)
+    {
+        free(count_array);
+        free(output_array);
+        return;
+    }
 
-for (i = 0; i <= (size_t)max; i++)
-count_array[i] = 0;
+    /* Initialize count_array with 0 */
+    for (i = 0; i <= (size_t)max; i++)
+        count_array[i] = 0;
 
-for (i = 0; i < size; i++)
-count_array[array[i]]++;
+    /* Store the count of each element in count_array */
+    for (i = 0; i < size; i++)
+        count_array[array[i]]++;
 
-print_array(count_array, max + 1);
+    /* Print the counting array after counting occurrences */
+    print_array(count_array, max + 1);
 
-for (i = 1; i <= (size_t)max; i++)
-count_array[i] += count_array[i - 1];
+    /* Update count_array to store cumulative counts */
+    for (i = 1; i <= (size_t)max; i++)
+        count_array[i] += count_array[i - 1];
 
-for (i = size; i > 0; i--)
-{
-output_array[count_array[array[i - 1]] - 1] = array[i - 1];
-count_array[array[i - 1]]--;
-}
+    /* Build the sorted output array */
+    for (i = size; i > 0; i--)
+    {
+        output_array[count_array[array[i - 1]] - 1] = array[i - 1];
+        count_array[array[i - 1]]--;
+    }
 
-for (i = 0; i < size; i++)
-array[i] = output_array[i];
+    /* Copy the sorted output array back into the original array */
+    for (i = 0; i < size; i++)
+        array[i] = output_array[i];
 
-free(count_array);
-free(output_array);
+    /* Free allocated memory */
+    free(count_array);
+    free(output_array);
 }
